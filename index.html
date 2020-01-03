@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Clock</title>
+    <style>
+        body {
+            margin: 0;
+            background: rgb(70, 70, 70);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            height: 100vh;
+            /* align-items: center; */
+        }
+
+        .circle2 {
+            width: 300px;
+            height: 300px;
+            background-image: url("./f1.svg"),url("./watch.jpg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-radius: 50%;
+            margin: 20px;
+            padding: 20px;
+            position: relative;
+        }
+        .jmin1 {
+            width: 10px;
+            height: 40%;
+            background: rgb(40, 81, 128);
+            position: absolute;
+            left: 50%;
+            top: 15%;
+            margin-left: -5px;
+        }
+        .jhour1 {
+            width: 10px;
+            height: 30%;
+            background: rgb(41, 41, 41);
+            position: absolute;
+            left: 50%;
+            top: 25%;
+            margin-left: -5px;
+        }
+        .jsec1 {
+            width: 4px;
+            height: 50%;
+            background: rgb(240, 208, 66);
+            position: absolute;
+            left: 50%;
+            top: 5%;
+            margin-left: -2px;
+        }
+
+        .zsec1 {
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            animation: j_s 60s infinite linear;
+        }
+        .zmin1 {
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            animation: j_m 3600s infinite linear;
+        }
+        .zhour1 {
+            width: 300px;
+            height: 300px;
+            position: absolute;
+            animation: j_h 43200s infinite linear;
+        }
+
+    </style>
+    <script>
+        // 15s = 90deg 要乘六
+        var time = new Date();
+        var pos_s = time.getSeconds();
+        var pos_m = time.getMinutes();
+        var pos_h = time.getHours();
+        var x = pos_s * 6, y = pos_m * 6 + pos_s * 0.1;
+        // for y 60s fill 6deg
+        var z = pos_h * 30 + pos_m * 0.5;
+        // 格與格之間會慢慢前進，對z來說來有一個角度是60m fill 30deg
+
+        document.write(`
+    <style>
+    @keyframes j_s {
+            from {  transform: rotate(${x}deg); }
+            to {    transform: rotate(${x + 360}deg); }
+        }
+        @keyframes j_m {
+            from {  transform: rotate(${y}deg);}
+            to {    transform: rotate(${y + 360}deg);}
+        }
+        @keyframes j_h {
+            from {  transform: rotate(${z}deg); }
+            to {    transform: rotate(${z + 360}deg);}
+        }
+    </style>    
+    `);
+    </script>
+</head>
+
+<body>
+    <div class="circle2">
+        <!-- 用父容器旋轉代替指針自己以中段為中心旋轉 -->
+        <div class="zmin1">
+            <div class="jmin1"></div>
+        </div>
+        <div class="zhour1">
+            <div class="jhour1"></div>
+        </div>
+        <div class="zsec1">
+            <div class="jsec1"></div>
+        </div>
+    </div>
+
+
+    <script>
+        
+        function overtime() {
+        time= new Date();
+        pos_s = time.getSeconds();
+        pos_m = time.getMinutes();
+        pos_h = time.getHours();
+        x = pos_s * 6, y = pos_m * 6 + pos_s * 0.1;
+        z = pos_h * 30 + pos_m * 0.5;
+        document.getElementsByClassName('osec4')[0].style.transform=`rotate(${x}deg)`;
+        document.getElementsByClassName('omin4')[0].style.transform=`rotate(${y}deg)`;
+        document.getElementsByClassName('ohour4')[0].style.transform=`rotate(${z}deg)`;
+        }
+        
+
+        // 初始先run DOM
+        document.getElementsByClassName('osec4')[0].style.transform=`rotate(${x}deg)`;
+        document.getElementsByClassName('omin4')[0].style.transform=`rotate(${y}deg)`;
+        document.getElementsByClassName('ohour4')[0].style.transform=`rotate(${z}deg)`;
+
+        //  run reply use JS es6
+        // var loop=setInterval(overtime, 1000);
+        var loop=setInterval(()=> {
+        time= new Date();
+        pos_s = time.getSeconds();
+        pos_m = time.getMinutes();
+        pos_h = time.getHours();
+        x = pos_s * 6, y = pos_m * 6 + pos_s * 0.1;
+        z = pos_h * 30 + pos_m * 0.5;
+        document.getElementsByClassName('osec4')[0].style.transform=`rotate(${x}deg)`;
+        document.getElementsByClassName('omin4')[0].style.transform=`rotate(${y}deg)`;
+        document.getElementsByClassName('ohour4')[0].style.transform=`rotate(${z}deg)`;
+        }, 1000);
+        
+
+        function ctl(who) {
+            if(who.textContent=="STOP") {
+                clearInterval(loop);
+                who.textContent="PLAY";
+            }
+            else {
+                loop=setInterval(overtime, 1000);
+                who.textContent="STOP";
+            }
+        }
+    </script>
+</body>
+
+</html>
